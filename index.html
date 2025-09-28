@@ -11,13 +11,25 @@
         /* सर्व थीम्ससाठी आवश्यक असलेले फॉन्ट लोड करत आहे */
         @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Montserrat:wght@400;600;800&family=Poppins:wght@600;800&family=EB+Garamond:wght@400;700&family=Dancing+Script:wght@700&family=Lora:wght@400;700&family=Roboto+Mono:wght@400&family=Josefin+Sans:wght@600&family=Open+Sans:wght@400;600&display=swap');
         
+        /* =============================================== */
+        /* १. बॅकग्राउंड ॲनिमेशन (Background Animation) */
+        /* =============================================== */
+        
+        @keyframes subtleBackgroundShift {
+            0% { background-color: #1C2827; }
+            25% { background-color: #151F23; }
+            50% { background-color: #201A18; }
+            75% { background-color: #151E1A; }
+            100% { background-color: #1C2827; }
+        }
+
         /* बेस स्टायलिंग */
         body {
-            background-color: #1C2827; 
+            /* ॲनिमेशन लागू केले: अतिशय हळूवार 40 सेकंदाचे ॲनिमेशन */
+            animation: subtleBackgroundShift 40s infinite alternate; 
             color: #F7F3E8; 
             font-family: 'Merriweather', serif;
-            /* थीम ट्रान्झिशनसाठी: पार्श्वभूमीचा रंग हळूवारपणे बदलेल */
-            transition: background-color 0.8s ease; 
+            transition: color 0.8s ease; /* फॉन्ट रंग ट्रान्झिशनसाठी */
             overflow-y: scroll; 
             overflow-x: hidden;
             overscroll-behavior-y: contain;
@@ -41,7 +53,6 @@
 
         /* सामान्य कार्ड स्टायलिंग (3D Card Style) */
         .ashtak-card {
-            /* ॲनिमेशन १: कार्डची ट्रान्झिशन स्मूथ केली आहे */
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             cursor: pointer;
             user-select: none;
@@ -51,10 +62,31 @@
                 0 4px 10px rgba(0, 0, 0, 0.4), 
                 inset 0 0 10px rgba(0, 0, 0, 0.3);
             position: relative;
-            /* ॲप लोड झाल्यावर कार्ड्स खालून वर येण्यासाठी */
             opacity: 0;
             transform: translateY(20px);
         }
+        
+        /* ॲनिमेशनसाठी ॲडजेस्टेड होव्हर इफेक्ट (Adjusted Hover Effect for Themed Glow) */
+        .ashtak-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            /* हा मूळ बॉक्स-शॅडो आहे, थीम-ग्लोजसाठी खाली CSS Variable वापरू */
+            box-shadow: var(--shadow-hover); 
+        }
+
+        /* थीम-आधारित लाईट ॲनिमेशन (Theme-based Light Animation) */
+        /* प्रत्येक कार्डसाठी 'highlight-color' CSS Variable म्हणून सेट केला जाईल */
+        .ashtak-card {
+            --highlight-color: #C9A04B; /* Default fallback */
+            --shadow-hover: 
+                0 0 15px rgba(0, 0, 0, 0.8), 
+                0 0 20px var(--highlight-color), 
+                0 0 30px var(--highlight-color);
+        }
+
+        .ashtak-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        
         /* कार्ड लोड झाल्यावर दिसण्यासाठी */
         .ashtak-card.loaded {
             opacity: 1;
@@ -62,13 +94,6 @@
         }
 
 
-        .ashtak-card:hover {
-            transform: translateY(-4px) scale(1.01);
-            box-shadow: 
-                0 10px 20px rgba(0, 0, 0, 0.6),
-                inset 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-        
         /* कार्ड टायटल बॅज स्टाईल */
         .title-badge {
             background-color: rgba(0, 0, 0, 0.2);
@@ -81,7 +106,10 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         
-        /* फुल-स्क्रीन मोडाल स्टायलिंग (Full-Screen Modal Styling) */
+        /* =============================================== */
+        /* २. फुल-स्क्रीन मोडाल स्टायलिंग (Full-Screen Modal Styling) */
+        /* =============================================== */
+        
         .fullscreen-modal {
             background-color: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(8px);
@@ -92,7 +120,7 @@
         .fullscreen-content {
             transition: transform 0.4s ease-out;
             transform: scale(0.95);
-            max-height: 100vh; /* सुनिश्चित करा की ते पूर्ण स्क्रीन व्यापेल */
+            max-height: 100vh;
         }
         
         .fullscreen-modal.active {
@@ -103,12 +131,20 @@
             transform: scale(1);
         }
         
-        /* मजकूर विभाग (Content Section) - जुना मजकूर टॉगल आता काढून टाकला आहे */
-        .full-content {
-             /* या घटकाची आता आवश्यकता नाही, परंतु लेआऊट व्यवस्थित ठेवण्यासाठी ठेवला आहे */
-             display: none; 
+        /* मजकूर कंटेनरला मध्यभागी करा (Centering the text) */
+        #fs-modal-text-wrapper {
+            text-align: center; /* मजकूर मध्यभागी करण्यासाठी */
         }
-
+        
+        #fs-modal-text {
+            white-space: pre-wrap;
+            /* मजकूर मध्यभागी दिसावा यासाठी */
+            display: inline-block; 
+            text-align: justify; /* मजकूर वाचनीय ठेवण्यासाठी justify वापरू शकतो, किंवा फक्त center */
+            text-align: center; /* संपूर्ण मजकूर मध्यभागी */
+            max-width: 100%; /* फुल-स्क्रीन व्ह्यूमध्ये मजकूर जास्त रुंद होऊ नये यासाठी */
+        }
+        
         /* बटण स्टायलिंग */
         .btn-base {
             transition: all 0.3s;
@@ -140,7 +176,7 @@
             display: flex;
             flex-direction: column;
             gap: 2rem;
-            transition: opacity 0.4s ease-in-out; /* लेआऊट बदलताना हळूवार होण्यासाठी */
+            transition: opacity 0.4s ease-in-out; 
         }
         
         /* २. Grid View */
@@ -158,7 +194,7 @@
         }
 
         .grid-view .title-badge h2 {
-            font-size: 1.1rem; /* Smaller title in grid */
+            font-size: 1.1rem; 
         }
         
         /* ३. Large Card View */
@@ -243,7 +279,7 @@
             <!-- शीर्षक -->
             <h2 id="fs-modal-title" class="text-3xl md:text-5xl font-extrabold mb-6 text-center border-b pb-4 mt-10 md:mt-0"></h2>
             
-            <!-- मजकूर: डबल टॅप/क्लिक केल्यावर बंद होईल -->
+            <!-- मजकूर: डबल टॅप/क्लिक केल्यावर बंद होईल. मजकूर मध्यभागी दिसेल. -->
             <div id="fs-modal-text-wrapper" 
                 ondblclick="closeModal('fullscreen-modal', 'fullscreen-content-container')"
                 class="max-w-3xl mx-auto py-4 md:py-8 whitespace-pre-wrap cursor-pointer">
@@ -398,10 +434,10 @@
         ];
         let currentLayoutIndex = 0;
         
-        // लाँग प्रेससाठी वेळ मर्यादा (Long press time threshold in milliseconds) - आता केवळ गोंधळ टाळण्यासाठी 500ms ठेवला आहे
+        // लाँग प्रेससाठी वेळ मर्यादा (Long press time threshold in milliseconds) 
         const LONG_PRESS_THRESHOLD = 500; 
         let pressTimer = null;
-        let isMoving = false; // टॅप करताना बोट हलले तर ते शॉर्ट टॅप म्हणून धरले जाऊ नये.
+        let isMoving = false; 
         
         // ===============================================
         // लेआऊट आणि फॉन्ट नियंत्रण फंक्शन्स
@@ -453,9 +489,10 @@
 
         /**
          * मुख्य बॉडी आणि ॲपचा रंग (Background/Text) थीमनुसार अपडेट करते.
+         * आता हे फंक्शन केवळ फॉन्ट कलर अपडेट करेल, कारण बॅकग्राउंड कलर CSS ॲनिमेशनद्वारे नियंत्रित आहे.
          */
         function updateBodyTheme(theme) {
-            document.body.style.backgroundColor = theme.bg;
+            // document.body.style.backgroundColor = theme.bg; // ॲनिमेशनमुळे याची गरज नाही
             document.body.style.color = theme.textColor;
         }
 
@@ -550,6 +587,9 @@
             card.style.color = theme.textColor;
             card.style.border = `2px solid ${theme.highlight}`;
             
+            // **थीम-आधारित लाईट ॲनिमेशनसाठी CSS Variable सेट करा**
+            card.style.setProperty('--highlight-color', theme.highlight);
+
             // CSS क्लास जोडून फॉन्ट लागू करा
             const fontClass = theme.font;
 
@@ -569,14 +609,12 @@
                 handleCardAction(card, item.title, item.content, theme);
             });
             
-            // टच इव्हेंट हँडलर - मोबाईलवर केवळ शॉर्ट प्रेस (Long press/preview now removed)
+            // टच इव्हेंट हँडलर - मोबाईलवर केवळ शॉर्ट प्रेस
             card.addEventListener('touchstart', (e) => {
                  e.preventDefault(); 
-                 // टच सुरू झाल्यावर कोणताही लाँग प्रेस टायमर सुरू करू नये
             }, { passive: false });
             
             card.addEventListener('touchend', (e) => {
-                // मोबाईलवर टच एन्ड झाल्यावर फुल-स्क्रीन मोडाल दाखवा
                 handleCardAction(card, item.title, item.content, theme);
             });
             
@@ -603,7 +641,7 @@
         function initApp() {
             const listContainer = document.getElementById('ashtak-list');
             
-            // मुख्य बॉडीला पहिल्या थीमचा रंग लावा (Smoothly)
+            // मुख्य बॉडीला पहिल्या थीमचा फॉन्ट कलर लावा (बॅकग्राउंड CSS ॲनिमेशनद्वारे नियंत्रित आहे)
             updateBodyTheme(customThemes[0]);
 
             // कार्ड्स तयार करा (Create the cards)
